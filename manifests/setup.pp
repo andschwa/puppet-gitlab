@@ -49,10 +49,16 @@ class gitlab::setup inherits gitlab {
     'Debian': {
       case $gitlab_dbtype {
         'mysql': {
-          ensure_packages(['libmysql++-dev','libmysqlclient-dev'])
+          ensure_packages(['libmysql++-dev'])
+          if $gitlab_db_ensure_client {
+            ensure_packages(['libmysqlclient-dev'])
+          }
         }
         'pgsql': {
-          ensure_packages(['libpq-dev','postgresql-client'])
+          ensure_packages(['libpq-dev'])
+          if $gitlab_db_ensure_client {
+            ensure_packages(['postgresql-client'])
+          }
         }
         default: {
           fail("unknow dbtype (${gitlab_dbtype})")

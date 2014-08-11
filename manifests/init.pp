@@ -89,6 +89,11 @@
 #   Gitlab database port
 #   default: 3306
 #
+# [*gitlab_db_ensure_client*]
+#   Whether or not this module should ensure the database client
+#   package is installed (used to manage conflicts with other modules)
+#   default: true
+#
 # [*gitlab_domain*]
 #   Gitlab domain
 #   default: $fqdn
@@ -295,6 +300,7 @@ class gitlab(
     $gitlab_dbpwd             = $gitlab::params::gitlab_dbpwd,
     $gitlab_dbhost            = $gitlab::params::gitlab_dbhost,
     $gitlab_dbport            = $gitlab::params::gitlab_dbport,
+    $gitlab_db_ensure_client  = $gitlab::params::gitlab_db_ensure_client,
     $gitlab_domain            = $gitlab::params::gitlab_domain,
     $gitlab_domain_alias      = $gitlab::params::gitlab_domain_alias,
     $gitlab_repodir           = $gitlab::params::gitlab_repodir,
@@ -363,6 +369,7 @@ class gitlab(
 
   validate_re($gitlab_dbtype, '(mysql|pgsql)', 'gitlab_dbtype is not supported')
   validate_re($gitlab_dbport, '^\d+$', 'gitlab_dbport is not a valid port')
+  validate_bool($gitlab_db_ensure_client)
   validate_re($ldap_port, '^\d+$', 'ldap_port is not a valid port')
   validate_re($gitlab_ssl_port, '^\d+$', 'gitlab_ssl_port is not a valid port')
   validate_re($gitlab_http_port, '^\d+$', 'gitlab_http_port is not a valid port')
